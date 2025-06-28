@@ -1,61 +1,59 @@
-import React, { useState } from "react";
-
-const categories = [
-  { id: 1, name: "Computadoras", description: "Portátiles y de escritorio" },
-  { id: 2, name: "Componentes", description: "Procesadores, tarjetas, memoria" },
-  { id: 3, name: "Periféricos", description: "Monitores, teclados, mouses" },
-  { id: 4, name: "Accesorios", description: "Cables, mochilas, hubs USB" },
-];
+import React from "react";
 
 const featuredProducts = [
-  "Laptop Gamer XYZ",
-  "Procesador Intel i7 12va Gen",
-  "Monitor 27'' 4K Ultra HD",
-  "Teclado Mecánico RGB",
+  {
+    id: 1,
+    name: "Laptop Gamer XYZ",
+    price: 1200,
+    image:
+      "https://th.bing.com/th/id/R.c11e868f644b5130a76a450156a10769?rik=vXP2h7U4ioiNRg&riu=http%3a%2f%2ftecnobits.xyz%2fwp-content%2fuploads%2f2017%2f12%2flas-mejores-laptops-gamers-2018.jpg&ehk=T%2fKIjicO2%2fVGyLQVKRuLENqlurTsthxb3aYWhLHjuBc%3d&risl=&pid=ImgRaw&r=0",
+  },
+  {
+    id: 2,
+    name: "Procesador Intel i7 12va Gen",
+    price: 350,
+    image:
+      "https://tse2.mm.bing.net/th/id/OIP.kcuXXc1Uw_YEAZtelDo5fwHaHa?rs=1&pid=ImgDetMain",
+  },
+  {
+    id: 3,
+    name: "Monitor 27'' 4K Ultra HD",
+    price: 400,
+    image:
+      "https://dojiw2m9tvv09.cloudfront.net/14577/product/10049-15311.jpg",
+  },
+  {
+    id: 4,
+    name: "Teclado Mecánico RGB",
+    price: 75,
+    image:
+      "https://tse4.mm.bing.net/th/id/OIP.bPl3R1qP-Agt5mcttILp1QHaEK?rs=1&pid=ImgDetMain",
+  },
+  {
+    id: 5,
+    name: "Mochila para Laptop",
+    price: 60,
+    image:
+      "https://th.bing.com/th/id/R.08a525c6a3f009e46c7ede9a0e1b80cd?rik=civ6O8TM0g9R1A&pid=ImgRaw&r=0",
+  },
 ];
 
 const Home = ({ user }) => {
-  const [showFeatured, setShowFeatured] = useState(false);
-
-  const toggleFeatured = () => setShowFeatured((prev) => !prev);
-
   const renderGreeting = () => {
     if (!user) {
       return (
         <>
           <h2>Bienvenido a TechStore</h2>
-          <p>
-            Explora nuestra amplia selección de computadoras, componentes y accesorios. 
-            Regístrate para comprar y seguir tus pedidos.
-          </p>
-          <button style={styles.primaryButton} onClick={() => alert("Ir a registro/login")}>
-            Crear Cuenta / Iniciar Sesión
-          </button>
+          <p>Explora nuestra amplia selección de productos tecnológicos.</p>
         </>
       );
     }
 
     switch (user.role) {
       case "cliente":
-        return (
-          <>
-            <h2>Hola, {user.name} 👋</h2>
-            <p>Encuentra lo que necesitas y revisa el estado de tus pedidos.</p>
-            <button style={styles.primaryButton} onClick={toggleFeatured}>
-              {showFeatured ? "Ocultar Productos Destacados" : "Ver Productos Destacados"}
-            </button>
-          </>
-        );
+        return <h2>Hola, {user.name} 👋</h2>;
       case "administrador":
-        return (
-          <>
-            <h2>Administrador {user.name}</h2>
-            <p>Gestiona productos, pedidos e inventario desde el panel de control.</p>
-            <button style={styles.primaryButton} onClick={() => alert("Ir al panel de administrador")}>
-              Panel de Administración
-            </button>
-          </>
-        );
+        return <h2>Administrador {user.name}</h2>;
       default:
         return <h2>Bienvenido a TechStore</h2>;
     }
@@ -75,7 +73,7 @@ const Home = ({ user }) => {
             <a href="/login" style={styles.navLink}>Iniciar Sesión</a>
           )}
           {user?.role === "administrador" && (
-            <a href="/admin" style={{...styles.navLink, fontWeight: "bold"}}>Admin</a>
+            <a href="/admin" style={{ ...styles.navLink, fontWeight: "bold" }}>Admin</a>
           )}
         </nav>
       </header>
@@ -83,26 +81,23 @@ const Home = ({ user }) => {
       <main style={styles.main}>
         <section style={styles.greetingSection}>{renderGreeting()}</section>
 
-        {showFeatured && (
-          <section style={styles.featuredSection}>
-            <h3>Productos Destacados</h3>
-            <ul>
-              {featuredProducts.map((prod, i) => (
-                <li key={i} style={styles.featuredItem}>{prod}</li>
-              ))}
-            </ul>
-          </section>
-        )}
-
-        <section style={styles.categoriesSection}>
-          <h3>Categorías</h3>
-          <div style={styles.categoriesGrid}>
-            {categories.map((cat) => (
-              <div key={cat.id} style={styles.categoryCard}>
-                <h4>{cat.name}</h4>
-                <p>{cat.description}</p>
-                <button style={styles.secondaryButton} onClick={() => alert(`Ver categoría: ${cat.name}`)}>
-                  Ver Productos
+        <section style={styles.productsSection}>
+          <h3>Productos Destacados</h3>
+          <div style={styles.productsGrid}>
+            {featuredProducts.map((prod) => (
+              <div key={prod.id} style={styles.productCard}>
+                <img
+                  src={prod.image}
+                  alt={prod.name}
+                  style={styles.productImage}
+                />
+                <h4>{prod.name}</h4>
+                <p style={styles.price}>${prod.price.toFixed(2)}</p>
+                <button
+                  style={styles.primaryButton}
+                  onClick={() => alert(`Agregar ${prod.name} al carrito`)}
+                >
+                  Agregar al carrito
                 </button>
               </div>
             ))}
@@ -117,7 +112,6 @@ const Home = ({ user }) => {
   );
 };
 
-// Estilos CSS en JS según paleta y tipografías dadas
 const styles = {
   container: {
     fontFamily: "'Montserrat', sans-serif",
@@ -128,7 +122,7 @@ const styles = {
     flexDirection: "column",
   },
   header: {
-    backgroundColor: "#0d1b2a", // Azul oscuro profesional
+    backgroundColor: "#0d1b2a",
     padding: "20px 40px",
     color: "white",
     display: "flex",
@@ -157,8 +151,36 @@ const styles = {
   greetingSection: {
     marginBottom: "30px",
   },
+  productsSection: {
+    marginTop: "20px",
+  },
+  productsGrid: {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
+    gap: "25px",
+  },
+  productCard: {
+    backgroundColor: "white",
+    borderRadius: "8px",
+    padding: "15px",
+    boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+    textAlign: "center",
+  },
+  productImage: {
+    width: "100%",
+    height: "140px",
+    objectFit: "cover",
+    borderRadius: "6px",
+    marginBottom: "10px",
+  },
+  price: {
+    fontWeight: "bold",
+    fontSize: "1.1rem",
+    color: "#ff6600",
+    marginBottom: "10px",
+  },
   primaryButton: {
-    backgroundColor: "#ff6600", // Naranja brillante
+    backgroundColor: "#ff6600",
     border: "none",
     color: "white",
     padding: "10px 20px",
@@ -166,40 +188,6 @@ const styles = {
     cursor: "pointer",
     fontWeight: "bold",
     fontSize: "1rem",
-    marginTop: "15px",
-  },
-  secondaryButton: {
-    backgroundColor: "#ddd",
-    border: "none",
-    color: "#333",
-    padding: "8px 15px",
-    borderRadius: "5px",
-    cursor: "pointer",
-    fontWeight: "bold",
-    marginTop: "10px",
-  },
-  featuredSection: {
-    backgroundColor: "#e3f2fd",
-    padding: "20px",
-    borderRadius: "6px",
-    marginBottom: "30px",
-  },
-  featuredItem: {
-    padding: "8px 0",
-    borderBottom: "1px solid #ccc",
-  },
-  categoriesSection: {},
-  categoriesGrid: {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))",
-    gap: "20px",
-  },
-  categoryCard: {
-    backgroundColor: "white",
-    borderRadius: "8px",
-    padding: "20px",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-    textAlign: "center",
   },
   footer: {
     backgroundColor: "#0d1b2a",
